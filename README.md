@@ -1,15 +1,3 @@
-#Struktur
-
-```
-queue-app/
-├── backend/
-│   ├── app.py            ← Flask API (Queue manual + SQLite)
-│   └── requirements.txt
-└── frontend/
-    └── index.html        ← Visualisasi Queue (buka di browser, css & js inline)
-```
-
----
 
 #Cara Menjalankan
 
