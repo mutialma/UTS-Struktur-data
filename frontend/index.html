@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌿 Antrian Bank Sampah</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g900:#0d2b0f; --g800:#1a4731; --g700:#1e5c3a; --g600:#256b44;
+  --g500:#2d8653; --g400:#3aaa6a; --g300:#52c47e; --g200:#85daa5;
+  --g100:#c2f0d4; --g50:#edfaf3;
+  --amber:#f59e0b; --red:#ef4444; --blue:#3b82f6;
+  --ink:#111827; --ink2:#374151; --ink3:#6b7280;
+  --line:#e5e7eb; --bg:#f4fbf7; --white:#fff;
+  --mono:'DM Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+a{cursor:pointer}
+
+/* ── HEADER ── */
+.header{
+  background:linear-gradient(135deg,var(--g900),var(--g700));
+  padding:20px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+  border-bottom:3px solid var(--g400);
+}
+.header-brand{display:flex;align-items:center;gap:12px}
+.brand-icon{width:44px;height:44px;background:var(--g400);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:22px}
+.brand-name{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff}
+.brand-sub{font-size:11px;color:var(--g200);margin-top:2px;font-family:var(--mono)}
+.header-status{display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.1);padding:8px 16px;border-radius:20px;
+  font-size:13px;color:var(--g100)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--g300);
+  animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── LAYOUT ── */
+.container{max-width:1300px;margin:0 auto;padding:24px 20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+.span-2{grid-column:span 2}
+
+/* ── CARD ── */
+.card{background:var(--white);border-radius:16px;border:1px solid var(--line);overflow:hidden}
+.card-head{padding:16px 20px 12px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.card-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--ink);
+  display:flex;align-items:center;gap:8px}
+.card-body{padding:20px}
+
+/* ── STATS ── */
+.stat{text-align:center;padding:16px;border-radius:12px;
+  border:1px solid var(--line);background:var(--white);transition:.2s}
+.stat:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.stat-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--g700);margin:8px 0 4px}
+.stat-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
+.stat-icon{font-size:24px}
+.stat.amber .stat-num{color:var(--amber)}
+.stat.red .stat-num{color:var(--red)}
+.stat.blue .stat-num{color:var(--blue)}
+
+/* ── FORM ── */
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--ink3);margin-bottom:6px}
+.form-control{width:100%;padding:10px 13px;border:1.5px solid var(--line);border-radius:10px;
+  font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--white);
+  outline:none;transition:.16s}
+.form-control:focus{border-color:var(--g500);box-shadow:0 0 0 3px rgba(58,170,106,.1)}
+select.form-control{cursor:pointer}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.preview-box{background:var(--g50);border:1px solid var(--g200);border-radius:10px;
+  padding:12px 14px;display:none;margin-top:-4px;margin-bottom:14px}
+.preview-label{font-size:11px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.preview-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--g700);margin-top:3px}
+
+/* ── BUTTON ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;
+  border:none;transition:.16s;white-space:nowrap}
+.btn:hover{filter:brightness(.92);transform:translateY(-1px)}
+.btn:active{transform:none}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn-green{background:var(--g700);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+.btn-amber{background:var(--amber);color:#fff}
+.btn-gray{background:var(--g50);color:var(--ink2);border:1px solid var(--line)}
+.btn-blue{background:var(--blue);color:#fff}
+.btn.full{width:100%;justify-content:center}
+.btn.sm{padding:6px 12px;font-size:12px}
+
+/* ── QUEUE VISUALIZER ── */
+.queue-vis{padding:20px;overflow-x:auto}
+.queue-vis-label{display:flex;justify-content:space-between;
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--ink3);margin-bottom:10px}
+.queue-track{
+  display:flex;align-items:stretch;gap:0;
+  min-height:90px;
+  background:var(--g50);
+  border-radius:12px;
+  border:2px dashed var(--g200);
+  padding:12px;
+  overflow-x:auto;
+  position:relative;
+}
+.queue-empty{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  color:var(--ink3);font-size:13px;gap:8px;
+}
+.q-node{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--white);
+  border:2px solid var(--g300);
+  border-radius:10px;
+  padding:10px 14px;
+  min-width:120px;
+  text-align:center;
+  position:relative;
+  flex-shrink:0;
+  animation:nodeIn .35s cubic-bezier(.22,.68,0,1.2);
+  transition:all .3s;
+}
+.q-node.front{border-color:var(--g600);background:var(--g50);box-shadow:0 0 0 3px rgba(58,170,106,.15)}
+.q-node.leaving{animation:nodeOut .3s ease forwards}
+@keyframes nodeIn{from{opacity:0;transform:translateX(20px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes nodeOut{to{opacity:0;transform:translateX(-20px) scale(.9)}}
+.q-node-num{font-family:var(--mono);font-size:11px;font-weight:500;
+  color:var(--ink3);margin-bottom:4px}
+.q-node-name{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  color:var(--ink);margin-bottom:3px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.q-node-detail{font-size:10px;color:var(--ink3)}
+.q-node-val{font-size:11px;font-weight:700;color:var(--g700);margin-top:3px}
+.q-arrow{display:flex;align-items:center;padding:0 4px;color:var(--g300);font-size:18px;flex-shrink:0}
+.q-badge{position:absolute;top:-8px;left:50%;transform:translateX(-50%);
+  background:var(--g600);color:#fff;font-size:9px;font-weight:700;
+  padding:2px 8px;border-radius:20px;white-space:nowrap}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{padding:10px 14px;background:var(--g50);text-align:left;
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--g700);border-bottom:1px solid var(--line);white-space:nowrap}
+tbody td{padding:11px 14px;border-bottom:1px solid var(--g50);color:var(--ink2);vertical-align:middle}
+tbody tr:hover td{background:var(--g50)}
+tbody tr:last-child td{border-bottom:none}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;
+  font-size:11px;font-weight:700}
+.badge-green{background:var(--g100);color:var(--g800)}
+.badge-amber{background:#fef3c7;color:#92400e}
+.badge-red{background:#fee2e2;color:#991b1b}
+.fw{font-weight:700;color:var(--ink)}
+.text-green{color:var(--g700)}
+
+/* ── TOAST ── */
+.toast-wrap{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:10px;z-index:999}
+.toast{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid var(--line);
+  border-left:4px solid var(--g500);border-radius:12px;padding:13px 16px;min-width:280px;max-width:340px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);animation:toastIn .3s ease}
+.toast.err{border-left-color:var(--red)}
+.toast.warn{border-left-color:var(--amber)}
+.toast-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700}
+.toast-msg{font-size:12px;color:var(--ink3);margin-top:2px}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+
+/* ── SEARCH ── */
+.search-wrap{display:flex;gap:10px;margin-bottom:14px}
+.search-wrap .form-control{flex:1}
+
+/* ── OPERASI LOG ── */
+.op-log{max-height:200px;overflow-y:auto;font-family:var(--mono);font-size:11px;
+  background:var(--g900);color:var(--g300);padding:14px;border-radius:10px;line-height:1.8}
+.op-log .line{display:flex;gap:10px}
+.op-log .time{color:var(--ink3)}
+.op-log .op-enq{color:var(--g300)}
+.op-log .op-deq{color:#f9a8d4}
+.op-log .op-peek{color:#93c5fd}
+.op-log .op-search{color:#fcd34d}
+
+/* ── POINTER DIAGRAM ── */
+.ptr-diagram{display:flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:12px;padding:12px 16px;
+  background:var(--g900);border-radius:10px;overflow-x:auto}
+.ptr{display:flex;flex-direction:column;align-items:center;gap:4px}
+.ptr-label{color:var(--amber);font-size:10px;font-weight:700}
+.ptr-box{background:var(--g800);color:var(--g200);padding:4px 10px;border-radius:6px;
+  border:1px solid var(--g600);white-space:nowrap}
+.ptr-arrow{color:var(--g400);font-size:18px;padding:0 4px}
+.ptr-null{color:var(--ink3)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .grid-3,.grid-2{grid-template-columns:1fr;gap:16px}
+  .span-2{grid-column:span 1}
+  .form-row{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .container{padding:16px 12px}
+  .header{padding:14px 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">
+    <div class="brand-icon">♻️</div>
+    <div>
+      <div class="brand-name">Antrian Bank Sampah</div>
+      <div class="brand-sub">Visualisasi Struktur Data: QUEUE (FIFO)</div>
+    </div>
+  </div>
+  <div class="header-status">
+    <div class="dot"></div>
+    <span id="statusText">Menghubungkan ke server…</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- STATS -->
+  <div class="grid-3" style="margin-bottom:20px">
+    <div class="stat">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-num" id="statMenunggu">0</div>
+      <div class="stat-label">Dalam Antrian</div>
+    </div>
+    <div class="stat amber">
+      <div class="stat-icon">✅</div>
+      <div class="stat-num" id="statDilayani">0</div>
+      <div class="stat-label">Sudah Dilayani</div>
+    </div>
+    <div class="stat blue">
+      <div class="stat-icon">💰</div>
+      <div class="stat-num" id="statNilai">Rp 0</div>
+      <div class="stat-label">Total Nilai Hari Ini</div>
+    </div>
+  </div>
+
+  <!-- VISUALISASI QUEUE + POINTER -->
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-head">
+      <div class="card-title"> Visualisasi Queue </div>
+      <div style="font-size:11px;color:var(--ink3);font-family:var(--mono)">
+        head → depan antrian &nbsp;|&nbsp; tail → belakang antrian
+      </div>
+    </div>
+    <div class="queue-vis">
+      <div class="queue-vis-label">
+        <span>⬅ DEQUEUE (dilayani dari sini)</span>
+        <span>ENQUEUE (masuk dari sini) ➡</span>
+      </div>
+      <div class="queue-track" id="queueTrack">
+        <div class="queue-empty">📭 Antrian kosong</div>
+      </div>
+    </div>
+    <!-- Pointer diagram -->
+    <div style="padding:0 20px 16px">
+      <div class="ptr-diagram" id="ptrDiagram">
+        <div class="ptr"><div class="ptr-label">head</div><div class="ptr-box ptr-null">NULL</div></div>
+        <div class="ptr-arrow">→</div>
+        <div class="ptr"><div class="ptr-label">tail</div><div class="ptr-box ptr-null">NULL</div></div>
+        <div class="ptr-arrow" style="margin-left:auto"></div>
+        <div style="color:var(--ink3);font-size:11px">ukuran: <span id="qSize" style="color:var(--g300)">0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+
+    <!-- ENQUEUE FORM -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">➕  Daftarkan Nasabah</div>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label class="form-label">Nama Nasabah</label>
+          <input class="form-control" id="inpNama" placeholder="Masukkan nama lengkap">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Jenis Sampah</label>
+            <select class="form-control" id="inpJenis" onchange="hitungEstimasi()">
+              <option value="">-- Pilih Jenis --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Berat (kg)</label>
+            <input type="number" class="form-control" id="inpBerat"
+              placeholder="0.0" step="0.1" min="0.1" oninput="hitungEstimasi()">
+          </div>
+        </div>
+        <div class="preview-box" id="previewBox">
+          <div class="preview-label">Estimasi Nilai Setoran</div>
+          <div class="preview-val" id="previewVal">Rp 0</div>
+        </div>
+        <button class="btn btn-green full" onclick="doEnqueue()">
+          ➕ Masukkan ke Antrian (Enqueue)
+        </button>
+      </div>
+    </div>
+
+    <!-- OPERASI LAIN -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">⚙️ Queue</div>
+      </div>
+      <div class="card-body">
+
+        <!-- Dequeue -->
+        <div style="margin-bottom:16px">
+          <div class="form-label"> Layani Nasabah Terdepan</div>
+          <div id="peekInfo" style="font-size:13px;color:var(--ink3);margin-bottom:8px;
+            background:var(--g50);padding:8px 12px;border-radius:8px;min-height:36px">
+            Belum ada nasabah
+          </div>
+          <button class="btn btn-red full" onclick="doDequeue()">
+            ✅ Layani & Keluarkan 
+          </button>
+        </div>
+
+        <!-- Peek -->
+        <div style="margin-bottom:16px">
+          <div class="form-label">Cek Nasabah Terdepan</div>
+          <button class="btn btn-amber full" onclick="doPeek()">
+            👁️ Lihat Terdepan
+          </button>
+        </div>
+
+        <!-- Search -->
+        <div>
+          <div class="form-label">Search — Cari Nasabah</div>
+          <div class="search-wrap">
+            <input class="form-control" id="inpCari" placeholder="Nama nasabah…"
+              onkeydown="if(event.key==='Enter')doCari()">
+            <button class="btn btn-blue sm" onclick="doCari()">🔍 Cari</button>
+          </div>
+          <div id="hasilCari" style="font-size:12px;color:var(--ink3)"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end grid-2 -->
+
+  <!-- TRAVERSAL + LOG -->
+  <div class="grid-2" style="margin-top:20px">
+
+    <!-- Traversal Table -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">📋  Semua Antrian Aktif</div>
+        <button class="btn btn-gray sm" onclick="loadAntrian()">🔄 Refresh</button>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Posisi</th><th>No.</th><th>Nama</th>
+              <th>Jenis Sampah</th><th>Berat</th><th>Est. Nilai</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyAntrian">
+            <tr><td colspan="6" style="text-align:center;padding:20px;color:var(--ink3)">📭 Antrian kosong</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Riwayat + Log -->
+    <div style="display:flex;flex-direction:column;gap:20px">
+
+      <!-- Riwayat -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">📜 Riwayat Dilayani</div>
+          <button class="btn btn-gray sm" onclick="loadRiwayat()">🔄 Refresh</button>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>No.</th><th>Nama</th><th>Jenis</th><th>Nilai</th><th>Waktu</th></tr></thead>
+            <tbody id="tbodyRiwayat">
+              <tr><td colspan="5" style="text-align:center;padding:16px;color:var(--ink3)">Belum ada</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Op Log -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">💻 Log Operasi</div>
+          <button class="btn btn-gray sm" onclick="clearLog()">🗑 Clear</button>
+        </div>
+        <div class="card-body" style="padding:0 16px 16px">
+          <div class="op-log" id="opLog">
+            <div class="line"><span class="time">--:--:--</span><span class="op-peek">⚡ Sistem siap. Menunggu operasi…</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end grid-2 -->
+
+</div><!-- end container -->
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────
+const API = 'http://localhost:5000/api';
+let hargaMap = {};
+
+// ── INIT ────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadHarga();
+  loadAntrian();
+  loadRiwayat();
+  loadStatistik();
+  setInterval(() => { loadAntrian(); loadStatistik(); }, 5000);
+});
+
+// ── API HELPER ───────────────────────────────────────────────
+async function api(method, path, body = null) {
+  try {
+    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    if (body) opts.body = JSON.stringify(body);
+    const res  = await fetch(API + path, opts);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Request gagal');
+    document.getElementById('statusText').textContent = '🟢 Server terhubung';
+    return data;
+  } catch (e) {
+    if (e.message === 'Failed to fetch') {
+      document.getElementById('statusText').textContent = '🔴 Server tidak terhubung';
+    }
+    throw e;
+  }
+}
+
+// ── LOAD DATA ────────────────────────────────────────────────
+async function loadHarga() {
+  try {
+    const res = await api('GET', '/harga');
+    const sel = document.getElementById('inpJenis');
+    sel.innerHTML = '<option value="">-- Pilih Jenis --</option>';
+    res.data.forEach(h => {
+      hargaMap[h.jenis] = h.harga_per_kg;
+      sel.innerHTML += `<option value="${h.jenis}">${h.jenis} — Rp ${h.harga_per_kg.toLocaleString('id-ID')}/kg</option>`;
+    });
+  } catch(e) { addLog('err', `Gagal load harga: ${e.message}`); }
+}
+
+async function loadAntrian() {
+  try {
+    const res = await api('GET', '/antrian');
+    renderQueueVis(res.data.antrian);
+    renderTbodyAntrian(res.data.antrian);
+    updatePtrDiagram(res.data.antrian);
+    document.getElementById('statMenunggu').textContent = res.data.jumlah;
+    document.getElementById('qSize').textContent = res.data.jumlah;
+
+    // Update peek info
+    const peekInfo = document.getElementById('peekInfo');
+    if (res.data.terdepan) {
+      const d = res.data.terdepan;
+      peekInfo.innerHTML = `<span style="font-weight:700;color:var(--ink)">No.${String(d.no_antrian).padStart(3,'0')} — ${d.nama}</span> &nbsp;|&nbsp; ${d.jenis_sampah} ${d.berat_kg}kg`;
+    } else {
+      peekInfo.textContent = 'Antrian kosong';
+    }
+  } catch(e) { /* silent */ }
+}
+
+async function loadRiwayat() {
+  try {
+    const res = await api('GET', '/riwayat?status=dilayani&limit=20');
+    renderTbodyRiwayat(res.data.riwayat);
+    document.getElementById('statDilayani').textContent = res.data.riwayat.length;
+    document.getElementById('statNilai').textContent = 'Rp ' + Math.round(res.data.total_nilai).toLocaleString('id-ID');
+  } catch(e) { /* silent */ }
+}
+
+async function loadStatistik() {
+  try {
+    const res = await api('GET', '/statistik');
+    document.getElementById('statDilayani').textContent = res.data.total_dilayani;
+    document.getElementById('statNilai').textContent = 'Rp ' + Math.round(res.data.total_nilai).toLocaleString('id-ID');
+  } catch(e) { /* silent */ }
+}
+
+// ── OPERASI ──────────────────────────────────────────────────
+async function doEnqueue() {
+  const nama  = document.getElementById('inpNama').value.trim();
+  const jenis = document.getElementById('inpJenis').value;
+  const berat = parseFloat(document.getElementById('inpBerat').value);
+
+  if (!nama)           { toast('err','Error','Nama nasabah wajib diisi'); return; }
+  if (!jenis)          { toast('err','Error','Pilih jenis sampah'); return; }
+  if (!berat || berat<=0){ toast('err','Error','Masukkan berat yang valid'); return; }
+
+  try {
+    const res = await api('POST', '/antrian', { nama, jenis_sampah: jenis, berat_kg: berat });
+    const d   = res.data;
+    toast('ok', 'Enqueue Berhasil!', `No.${String(d.no_antrian).padStart(3,'0')} — ${d.nama} masuk antrian`);
+    addLog('enq', `ENQUEUE → No.${String(d.no_antrian).padStart(3,'0')} | ${d.nama} | ${d.jenis_sampah} ${d.berat_kg}kg | Rp ${Math.round(d.estimasi_nilai).toLocaleString('id-ID')}`);
+    document.getElementById('inpNama').value  = '';
+    document.getElementById('inpBerat').value = '';
+    document.getElementById('inpJenis').value = '';
+    document.getElementById('previewBox').style.display = 'none';
+    loadAntrian();
+    loadStatistik();
+  } catch(e) { toast('err','Gagal', e.message); }
+}
+
+async function doDequeue() {
+  try {
+    const res = await api('DELETE', '/antrian');
+    const d   = res.data.dilayani;
+    toast('ok', 'Dequeue Berhasil!', `${d.nama} telah dilayani — Rp ${Math.round(d.estimasi_nilai).toLocaleString('id-ID')}`);
+    addLog('deq', `DEQUEUE ← No.${String(d.no_antrian).padStart(3,'0')} | ${d.nama} | Sisa: ${res.data.sisa_antrian}`);
+    loadAntrian();
+    loadRiwayat();
+    loadStatistik();
+  } catch(e) { toast('err','Gagal', e.message); }
+}
+
+async function doPeek() {
+  try {
+    const res = await api('GET', '/antrian/peek');
+    if (!res.data) {
+      toast('warn','Peek','Antrian kosong');
+      addLog('peek', 'PEEK → Antrian kosong');
+      return;
+    }
+    const d = res.data;
+    toast('ok','Peek', `Terdepan: No.${String(d.no_antrian).padStart(3,'0')} — ${d.nama} (${d.jenis_sampah} ${d.berat_kg}kg)`);
+    addLog('peek', `PEEK → No.${String(d.no_antrian).padStart(3,'0')} | ${d.nama} | ${d.jenis_sampah} — nasabah TIDAK dikeluarkan`);
+  } catch(e) { toast('err','Gagal', e.message); }
+}
+
+async function doCari() {
+  const kata = document.getElementById('inpCari').value.trim();
+  if (!kata) { toast('err','Error','Masukkan nama yang dicari'); return; }
+  try {
+    const res   = await api('GET', `/antrian/cari?nama=${encodeURIComponent(kata)}`);
+    const hasil = document.getElementById('hasilCari');
+    addLog('search', `SEARCH "${kata}" → ${res.data.jumlah} hasil ditemukan`);
+    if (res.data.jumlah === 0) {
+      hasil.innerHTML = `<span style="color:var(--red)">❌ Tidak ditemukan dalam antrian</span>`;
+      toast('warn','Tidak Ditemukan', `"${kata}" tidak ada dalam antrian`);
+    } else {
+      hasil.innerHTML = res.data.hasil.map(d =>
+        `<div style="padding:6px 10px;background:var(--g50);border-radius:6px;margin-top:4px;font-size:12px">
+          <b>Posisi ke-${d.posisi}</b> · No.${String(d.no_antrian).padStart(3,'0')} · ${d.nama} · ${d.jenis_sampah}
+        </div>`
+      ).join('');
+      toast('ok','Ditemukan!', `${res.data.jumlah} nasabah cocok dengan "${kata}"`);
+    }
+  } catch(e) { toast('err','Gagal', e.message); }
+}
+
+// ── RENDER ───────────────────────────────────────────────────
+function renderQueueVis(antrian) {
+  const track = document.getElementById('queueTrack');
+  if (!antrian.length) {
+    track.innerHTML = '<div class="queue-empty">📭 Antrian kosong</div>';
+    return;
+  }
+  let html = '';
+  antrian.forEach((d, i) => {
+    const isFront = i === 0;
+    const isBack  = i === antrian.length - 1;
+    html += `<div class="q-node ${isFront ? 'front' : ''}">
+      ${isFront ? '<div class="q-badge">HEAD (terdepan)</div>' : ''}
+      ${isBack && antrian.length > 1 ? '<div class="q-badge" style="background:var(--g400)">TAIL</div>' : ''}
+      <div class="q-node-num">No.${String(d.no_antrian).padStart(3,'0')}</div>
+      <div class="q-node-name">${d.nama}</div>
+      <div class="q-node-detail">${d.jenis_sampah}</div>
+      <div class="q-node-detail">${d.berat_kg} kg</div>
+      <div class="q-node-val">Rp ${Math.round(d.estimasi_nilai).toLocaleString('id-ID')}</div>
+    </div>`;
+    if (i < antrian.length - 1) {
+      html += '<div class="q-arrow">→</div>';
+    }
+  });
+  track.innerHTML = html;
+}
+
+function updatePtrDiagram(antrian) {
+  const el = document.getElementById('ptrDiagram');
+  if (!antrian.length) {
+    el.innerHTML = `
+      <div class="ptr"><div class="ptr-label">head</div><div class="ptr-box ptr-null">NULL</div></div>
+      <div class="ptr-arrow">→</div>
+      <div class="ptr"><div class="ptr-label">tail</div><div class="ptr-box ptr-null">NULL</div></div>
+      <div style="margin-left:auto;color:var(--ink3);font-size:11px">ukuran: <span style="color:var(--g300)">0</span></div>`;
+    return;
+  }
+  const h = antrian[0];
+  const t = antrian[antrian.length - 1];
+  el.innerHTML = `
+    <div class="ptr"><div class="ptr-label">head</div><div class="ptr-box">No.${String(h.no_antrian).padStart(3,'0')} (${h.nama.split(' ')[0]})</div></div>
+    <div class="ptr-arrow">→ next →</div>
+    <span style="color:var(--ink3);font-size:10px">${antrian.length > 2 ? `… (${antrian.length-2} node) …` : ''}</span>
+    ${antrian.length > 1 ? `<div class="ptr-arrow">→ next →</div>` : ''}
+    <div class="ptr"><div class="ptr-label">tail</div><div class="ptr-box">No.${String(t.no_antrian).padStart(3,'0')} (${t.nama.split(' ')[0]})</div></div>
+    <div class="ptr-arrow">→</div>
+    <div class="ptr"><div class="ptr-label">next</div><div class="ptr-box ptr-null">NULL</div></div>
+    <div style="margin-left:auto;color:var(--ink3);font-size:11px">ukuran: <span style="color:var(--g300)">${antrian.length}</span></div>`;
+}
+
+function renderTbodyAntrian(antrian) {
+  const el = document.getElementById('tbodyAntrian');
+  if (!antrian.length) {
+    el.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--ink3)">📭 Antrian kosong</td></tr>';
+    return;
+  }
+  el.innerHTML = antrian.map((d,i) => `<tr>
+    <td>${i === 0 ? '<span class="badge badge-green">◄ Depan</span>' : d.posisi}</td>
+    <td class="fw">${String(d.no_antrian).padStart(3,'0')}</td>
+    <td class="fw">${d.nama}</td>
+    <td>${d.jenis_sampah}</td>
+    <td>${d.berat_kg} kg</td>
+    <td class="text-green fw">Rp ${Math.round(d.estimasi_nilai).toLocaleString('id-ID')}</td>
+  </tr>`).join('');
+}
+
+function renderTbodyRiwayat(rows) {
+  const el = document.getElementById('tbodyRiwayat');
+  if (!rows.length) {
+    el.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:16px;color:var(--ink3)">Belum ada</td></tr>';
+    return;
+  }
+  el.innerHTML = rows.map(d => `<tr>
+    <td class="fw">${String(d.no_antrian).padStart(3,'0')}</td>
+    <td>${d.nama}</td>
+    <td>${d.jenis_sampah}</td>
+    <td class="text-green fw">Rp ${Math.round(d.estimasi_nilai).toLocaleString('id-ID')}</td>
+    <td style="font-size:11px;color:var(--ink3)">${d.waktu_dilayani ? d.waktu_dilayani.split(' ')[1] || d.waktu_dilayani : '-'}</td>
+  </tr>`).join('');
+}
+
+// ── HELPERS ──────────────────────────────────────────────────
+function hitungEstimasi() {
+  const jenis = document.getElementById('inpJenis').value;
+  const berat = parseFloat(document.getElementById('inpBerat').value) || 0;
+  const box   = document.getElementById('previewBox');
+  if (jenis && berat > 0 && hargaMap[jenis]) {
+    const nilai = berat * hargaMap[jenis];
+    document.getElementById('previewVal').textContent = 'Rp ' + Math.round(nilai).toLocaleString('id-ID');
+    box.style.display = 'block';
+  } else {
+    box.style.display = 'none';
+  }
+}
+
+function toast(type, title, msg) {
+  const icons = { ok:'✅', err:'❌', warn:'⚠️' };
+  const wrap  = document.getElementById('toastWrap');
+  const el    = document.createElement('div');
+  el.className = `toast ${type === 'err' ? 'err' : type === 'warn' ? 'warn' : ''}`;
+  el.innerHTML = `<div style="font-size:20px">${icons[type]}</div>
+    <div><div class="toast-title">${title}</div><div class="toast-msg">${msg}</div></div>`;
+  wrap.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+function addLog(type, msg) {
+  const log  = document.getElementById('opLog');
+  const time = new Date().toTimeString().split(' ')[0];
+  const cls  = type === 'enq' ? 'op-enq' : type === 'deq' ? 'op-deq'
+             : type === 'peek' ? 'op-peek' : type === 'search' ? 'op-search' : 'op-peek';
+  const line = document.createElement('div');
+  line.className = 'line';
+  line.innerHTML = `<span class="time">${time}</span><span class="${cls}"> ${msg}</span>`;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+}
+
+function clearLog() {
+  document.getElementById('opLog').innerHTML =
+    '<div class="line"><span class="time">--:--:--</span><span class="op-peek"> Log dibersihkan.</span></div>';
+}
+</script>
+</body>
+</html>
